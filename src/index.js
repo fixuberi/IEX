@@ -3,10 +3,14 @@ import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from './components/App';
-import rootReducer from './reducers';
+import thunkMiddleware from 'redux-thunk'
+import { combineReducers, applyMiddleware } from 'redux';
+import * as reducers from './reducers';
 import * as serviceWorker from './serviceWorker';
 
-const store = createStore(rootReducer);
+const rootReducer = combineReducers(reducers);
+const store = createStore(rootReducer, 
+                          applyMiddleware(thunkMiddleware));
 
 render(
     <Provider store={store}>
