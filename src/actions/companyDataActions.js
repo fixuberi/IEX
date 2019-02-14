@@ -18,5 +18,6 @@ export function fetchCompanyData(symbol) {
             .then(response => response.json())
             .then(json => {
                 dispatch(reciveCompanyData(json))});
+
     }
 }

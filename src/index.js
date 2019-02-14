@@ -12,8 +12,8 @@ import * as serviceWorker from './serviceWorker';
 // import { fetchCompanyData } from './actions/companyDataActions';
 // import { fetchChartPoints } from './actions/chartPointsActions';
 
-// const store = createStore(rootReducer, 
-//                           applyMiddleware(thunkMiddleware));
+const store = createStore(rootReducer, 
+                          applyMiddleware(thunkMiddleware));
 // store.dispatch(setCompanySymbol('aapl'));
 // store.dispatch(fetchCompanyData(store.getState().companySymbol));
 // store.dispatch(fetchChartPoints(store.getState().companySymbol), store.getState().period);
