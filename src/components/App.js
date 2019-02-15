@@ -7,6 +7,7 @@ import CompanyChartsCollectionContainer from '../containers/CompanyChartsCollect
 const App = () => (
     <div>
         <SearchFormContainer />
+        <PeriodSelectorContainer />
         <CompanyInfoContainer />
         <CompanyChartsCollectionContainer />
     </div>
