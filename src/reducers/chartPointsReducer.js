@@ -1,4 +1,4 @@
-import { REQUEST_CHART_POINTS, RECIVE_CHART_POINTS } from '../actions/chartPointsActions';
+import { REQUEST_CHART_POINTS, RECIVE_CHART_POINTS, CLEAR_CHART_POINTS } from '../actions/chartPointsActions';
 
 export default function chartPoints(state = {
     isFetching: false,
@@ -11,7 +11,12 @@ export default function chartPoints(state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 data: action.data
-            })
+            });
+        case CLEAR_CHART_POINTS: 
+            return Object.assign({}, state, {
+                isFetching: false,
+                data: []
+            });
         default: 
             return state;
     }
