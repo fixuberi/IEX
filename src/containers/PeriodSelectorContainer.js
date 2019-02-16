@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import PeriodSelector from '../components/PeriodSelector';
-import { Periods } from '../actions/periodActions';
+import { Periods, setPeriod } from '../actions/periodActions';
 import { store } from '../index';
+import { fetchChartPoints } from '../actions/chartPointsActions';
 
 function mapStateToProps() {
     const period = store.getState().period;
@@ -14,7 +15,7 @@ function mapDispatchToProps() {
     return {
         onChange: (period) => {
             store.dispatch(setPeriod(period));
-            const { companySymbol, period } = store.getState();
+            const { companySymbol } = store.getState();
             if(companySymbol) {
                 store.dispatch(fetchChartPoints(companySymbol, period));
             }

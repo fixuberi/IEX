@@ -11,7 +11,24 @@ export default class PeriodSelector extends Component {
         this.props.onChange(period);
         this.state.period = period;
     }
+    humanizePeriod = (str) => {
+        const periodNames = { 
+            'm': 'month', 
+            'y': 'year' 
+        }
+        let [ quantity, sign ] = str;
+        let humanizedPeriodName = periodNames[sign];
+        if(quantity > 1) humanizedPeriodName += 's';
+
+        return `${quantity} ${humanizedPeriodName}`;
+    }
     render() {
-        
+        return (
+            <select onChange={this.handleChange}>
+                {this.props.allOptions.map(el => {
+                    return <option key={el} value={el}>{this.humanizePeriod(el)}</option>
+                })}
+            </select>
+        )
     }
 }
