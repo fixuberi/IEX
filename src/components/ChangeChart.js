@@ -1,12 +1,10 @@
 import React from 'react';
+import LineChart from './LineChart';
 
 const ChangeChart = ({ data, isFetching }) => {
     return (
         <div>
-            <h2>ChangeChart</h2>
-            {data.map(el => {
-                return <div>{`${el.date} - ${el.change}`}</div>
-            })}
+            <LineChart data={data} displayedMetric="change" lineColor="#ff0000" />
         </div>
     )
 };

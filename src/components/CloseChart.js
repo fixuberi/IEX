@@ -1,12 +1,10 @@
 import React from 'react';
+import LineChart from './LineChart';
 
 const CloseChart = ({ data, isFetching }) => {
     return (
         <div>
-            <h2>CloseChart</h2>
-            {data.map(el => {
-                return <div>{`${el.date} - ${el.close}`}</div>
-            })}
+            <LineChart data={data} displayedMetric="close" lineColor="#00ff00" />
         </div>
     )
 };

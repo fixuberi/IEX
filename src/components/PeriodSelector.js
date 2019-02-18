@@ -9,7 +9,7 @@ export default class PeriodSelector extends Component {
     handleChange = (event) => {
         const period = event.target.value;
         this.props.onChange(period);
-        this.state.period = period;
+        this.setState({period});
     }
     humanizePeriod = (str) => {
         const periodNames = { 
