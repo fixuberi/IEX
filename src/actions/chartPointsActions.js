@@ -11,7 +11,7 @@ function reciveChartPoints(json) {
         data: json
     }
 }
-function clearChartPoints() {
+export function clearChartPoints() {
     return {
         type: CLEAR_CHART_POINTS
     }

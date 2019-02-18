@@ -11,7 +11,7 @@ function reciveCompanyData(json) {
         data: json
     }
 }
-function clearCompanyData() {
+export function clearCompanyData() {
     return {
         type: CLEAR_COMPANY_DATA
     }

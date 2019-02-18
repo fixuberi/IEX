@@ -18,12 +18,14 @@ class Charts extends Component {
         this.onChangePeriod = this.onChangePeriod.bind(this);
     }
     async onSearchSubmit(companySymbol){
+        const {chartActions, currPeriod} = this.props;
         try {
-            const {chartActions, currPeriod} = this.props;
             await chartActions.setCompanySymbol(companySymbol);
             await chartActions.fetchCompanyData(companySymbol);
             await chartActions.fetchChartPoints(companySymbol, currPeriod);
         } catch (error) {
+            await chartActions.clearCompanyData();
+            await chartActions.clearChartPoints();
             console.error(error);
         }
     }
@@ -31,7 +33,7 @@ class Charts extends Component {
         try {
             const { chartActions, companySymbol } = this.props;
             await chartActions.setPeriod(period);
-            if(companySymbol) chartActions.fetchChartPoints(companySymbol);
+            if(companySymbol) chartActions.fetchChartPoints(companySymbol, period);
         } catch(error) {
             console.log(error)
         }
