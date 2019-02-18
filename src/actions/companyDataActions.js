@@ -18,17 +18,11 @@ function clearCompanyData() {
 } 
 
 export function fetchCompanyData(symbol) {
-    return function(dispatch) {
+    return async function(dispatch) {
         dispatch(requestCompanyData());
-        return fetch(`https://api.iextrading.com/1.0/stock/${symbol}/company`)
-            .then(response => {
-                if(response.status === 404) throw 404;
-                return response.json();
-            })
-            .then(json => {
-                dispatch(reciveCompanyData(json))})
-            .catch(e => {
-                dispatch(clearCompanyData());
-            });
+        const response = await fetch(`https://api.iextrading.com/1.0/stock/${symbol}/company`)
+        if(response.status === 404) throw 404;
+        const json = await response.json();
+        dispatch(reciveCompanyData(json));
     }
 }

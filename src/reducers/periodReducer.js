@@ -1,6 +1,6 @@
-import { SET_PERIOD, Periods } from '../actions/periodActions';
+import { SET_PERIOD, availablePeriods } from '../actions/periodActions';
 
-export default function period(state = Periods.ONE_MONTH, action) {
+export default function period(state = availablePeriods.ONE_MONTH, action) {
     switch(action.type) {
         case SET_PERIOD: 
             return action.period;

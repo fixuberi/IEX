@@ -17,32 +17,23 @@ function clearChartPoints() {
     }
 }
 export function fetchChartPoints(symbol, period) {
-    return function(dispatch) {
+    return async function(dispatch) {
         dispatch(requestChartPoints());
-        return fetch(`https://api.iextrading.com/1.0/stock/${symbol}/chart/${period}`)
-            .then(response => {
-                if(response.status === 404) throw 404;
-                return response.json();
-            })
-            .then(json => {
-                const allowedKeys = ['date', 'change', 'close'];
-                const filteredJson = json.map(rawObj => {
-                    return Object.keys(rawObj)
-                                .filter(key => allowedKeys.includes(key))
-                                .reduce((obj, key) => {
-                                    return {
-                                        ...obj,
-                                        [key]: rawObj[key]
-                                    };
-                                }, {});
-                })
-                return filteredJson;
-            })
-            .then(json => {
-                dispatch(reciveChartPoints(json))})
-            .catch(e => {
-                dispatch(clearChartPoints());
-            });
+        const response = await fetch(`https://api.iextrading.com/1.0/stock/${symbol}/chart/${period}`);
+        if(response.status === 404) throw 404;
+        const json = await response.json();           
+        const allowedKeys = ['date', 'change', 'close'];
+        const filteredJson = json.map(rawObj => {
+            return Object.keys(rawObj)
+                        .filter(key => allowedKeys.includes(key))
+                        .reduce((obj, key) => {
+                            return {
+                                ...obj,
+                                [key]: rawObj[key]
+                            };
+                        }, {});
+        });     
+        dispatch(reciveChartPoints(filteredJson))    
     }
 }
 

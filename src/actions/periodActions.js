@@ -1,5 +1,5 @@
 export const SET_PERIOD = 'SET_PERIOD';
-export const Periods = {
+export const availablePeriods = {
     FIVE_YEARS:   '5y',
     TWO_YEARS:    '2y',
     ONE_YEAR:     '1y',

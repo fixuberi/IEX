@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export default class PeriodSelector extends Component {
     constructor(props) {
         super(props);
-        this.state = { period: this.props.period};
+        this.state = { period: this.props.currPeriod};
     }
 
     handleChange = (event) => {
@@ -25,9 +25,9 @@ export default class PeriodSelector extends Component {
     render() {
         return (
             <select onChange={this.handleChange}>
-                {this.props.allOptions.map(el => {
-                    return <option key={el} value={el}>{this.humanizePeriod(el)}</option>
-                })}
+                {this.props.allPeriods.map(el => (
+                    <option key={el} value={el}>{this.humanizePeriod(el)}</option>
+                ))}
             </select>
         )
     }
