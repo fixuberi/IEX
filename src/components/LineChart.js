@@ -4,11 +4,9 @@ import { Chart } from 'chart.js';
 export default class LineChart extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            id: this.props.displayedMetric + 'Chart',
-            chart: null
-        }
-    }
+        this.chart = null;
+        this.id = this.props.displayedMetric + 'Chart';
+     }
 
     _formatedData() {
         let labels = [];
@@ -30,22 +28,22 @@ export default class LineChart extends Component {
     }
     componentDidUpdate(prevProps) {
         if(prevProps.data !== this.props.data) {
-            this.state.chart.data = this._formatedData();
-            this.state.chart.update()
+            this.chart.data = this._formatedData();
+            this.chart.update()
         }
     }
     componentDidMount() {
-        let ctx = document.getElementById(this.state.id).getContext('2d');
+        let ctx = document.getElementById(this.id).getContext('2d');
         let chart = new Chart(ctx, {
             type: 'line',
             data: {},
             options: {}
         });
-        this.setState({ chart: chart });
+        this.chart = chart;
     }
     render() {
         return(
-            <canvas id={this.state.id}></canvas>
+            <canvas id={this.id}></canvas>
         );
     }
 }

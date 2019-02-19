@@ -1,33 +1,47 @@
 import React, { Component } from 'react';
 
 export default class Popup extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
+        this.count = 0;
+        this.state = {};
     }
-    componentDidMount() {
-        // debugger;
-        // const popup = document.getElementById("popup");
-        // setTimeout(() => {
-        //     popup.style.display = 'none';
-        // }, 2000);
-        // this.props.onShow();
+    error(data, delay) {
+        this.addNotification(data, delay, 'error');
+    }
+    addNotification(data, delay, theme) {
+        const key = this.count++;
+        const newState = Object.assign(this.state, 
+                                       { [key]: { msg: data.msg, theme: theme } }
+                                       );
+        this.setState(newState, () => this.countThenHide(key, delay));
+    }
+    countThenHide(key, time) {
+        setTimeout(() => {
+            this.hideNotification(key);
+        }, time);
+    }
+    hideNotification(key) {
+        this.setState((state) => {
+            delete state[key];
+            return state;
+        })
+    }
+    makeItem(key) {
+        const item = this.state[key];
+        return(
+            <div className={`popup-notification__item ${item.theme}`}
+                 onClick={() => this.hideNotification(key)}
+                 key={key}>
+                {item.msg}
+            </div>
+        );
     }
     render() {
-        debugger;
-        let popup;
-        if(this.props.errors.length > 0) {
-            popup = (
-                <div style="background: red" id="popup">
-                    <ul>
-                        {this.props.errors.map(err => (
-                            <li>{err}</li>
-                        ))}
-                    </ul>
-                </div>
-            ) 
-        } else popup = '';
+        const keys = Object.keys(this.state);
+        const items = keys.map(key => this.makeItem(key));
         return(
-            popup
+            <div className="popup-notification" style={{position: 'absolute', top:0, right:0, color: 'red'}}>{items}</div>
         )
-    }
+    } 
 }

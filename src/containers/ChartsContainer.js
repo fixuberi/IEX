@@ -17,6 +17,7 @@ class Charts extends Component {
         super(props);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.onChangePeriod = this.onChangePeriod.bind(this);
+        this.popup = React.createRef();
     }
     async onSearchSubmit(companySymbol){
         const {chartActions, currPeriod} = this.props;
@@ -27,7 +28,8 @@ class Charts extends Component {
         } catch (error) {
             await chartActions.clearCompanyData();
             await chartActions.clearChartPoints();
-            await chartActions.addErrorMessage(`Company with symbol ${companySymbol} does not exist`)
+            await chartActions.addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
+            await this.showError(this.props.uiNotifications.errors);
             console.error(error);
         }
     }
@@ -40,15 +42,16 @@ class Charts extends Component {
             console.log(error)
         }
     }
-    onShowPopup = () => {
-        const { chartActions } = this.props;
-        chartActions.clearAllMessages();    
+    showError(errors) {
+        errors.forEach((el) => {
+            this.popup.current.error({ msg: el}, 2000);
+        });
+        this.props.chartActions.clearAllMessages();
     }
+    
     render(){
         return(
             <div>
-                <Popup errors={this.props.uiNotifications.errors}
-                       onShow={this.onShowPopup} />
                 <SearchForm onSubmit={this.onSearchSubmit} />
                 <PeriodSelector onChange={this.onChangePeriod} 
                                 currPeriod={this.props.period}
@@ -57,6 +60,7 @@ class Charts extends Component {
                             isFetching={this.props.companyInfo.isFetching} />
                 <CompanyChartsCollection data={this.props.chartPoints.data} 
                                         isFetching={this.props.chartPoints.isFetching} />
+                <Popup ref={this.popup} />
             </div>
         )
     }
