@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { Chart } from 'chart.js';
- 
+import styled from 'styled-components';
+
+const ChartWrapper = styled.div`
+    position: relative;
+    width:45vw;
+    @media (max-width: 1200px) {
+        width: 90vw;
+    }
+`;
+
 export default class LineChart extends Component {
     constructor(props) {
         super(props);
@@ -43,7 +52,9 @@ export default class LineChart extends Component {
     }
     render() {
         return(
-            <canvas id={this.id}></canvas>
+            <ChartWrapper>
+                <canvas id={this.id}></canvas>
+            </ChartWrapper>
         );
     }
 }

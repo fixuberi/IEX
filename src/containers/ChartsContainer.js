@@ -11,6 +11,30 @@ import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import Popup from '../components/Popup';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import styled from 'styled-components';
+
+const ChartsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const Search = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+`;
+const PopupWrapper = styled.div`
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+`;
 
 class Charts extends Component {
     constructor(props) {
@@ -51,17 +75,23 @@ class Charts extends Component {
     
     render(){
         return(
-            <div>
-                <SearchForm onSubmit={this.onSearchSubmit} />
-                <PeriodSelector onChange={this.onChangePeriod} 
-                                currPeriod={this.props.period}
-                                allPeriods={this.props.allPeriods} />
-                <CompanyInfo data={this.props.companyInfo.data}
-                            isFetching={this.props.companyInfo.isFetching} />
-                <CompanyChartsCollection data={this.props.chartPoints.data} 
-                                        isFetching={this.props.chartPoints.isFetching} />
-                <Popup ref={this.popup} />
-            </div>
+            <ChartsWrapper>
+                <Search>
+                    <SearchForm onSubmit={this.onSearchSubmit} />
+                    <PeriodSelector onChange={this.onChangePeriod} 
+                                    currPeriod={this.props.period}
+                                    allPeriods={this.props.allPeriods} />
+                </Search>
+                <Content>
+                    <CompanyInfo data={this.props.companyInfo.data}
+                                isFetching={this.props.companyInfo.isFetching} />
+                    <CompanyChartsCollection data={this.props.chartPoints.data} 
+                                            isFetching={this.props.chartPoints.isFetching} />
+                </Content>
+                <PopupWrapper>
+                    <Popup ref={this.popup} />
+                </PopupWrapper>
+            </ChartsWrapper>
         )
     }
 }

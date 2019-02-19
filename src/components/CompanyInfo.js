@@ -13,6 +13,14 @@ const CompanyInfo = ({ data, isFetching }) => {
                         </li>
             })}
         </ul>
+        <CompanyInfoWrapper>
+            <MainInfo>
+                <CompanyName></CompanyName>
+                {/* industry sector ceo exchange web */}
+            </MainInfo>
+            <Description></Description>
+            <Tags></Tags>
+        </CompanyInfoWrapper> 
     )
 }
 
