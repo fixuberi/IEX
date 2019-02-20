@@ -7,6 +7,7 @@ import thunkMiddleware from 'redux-thunk'
 import { applyMiddleware } from 'redux';
 import { rootReducer } from './reducers';
 import * as serviceWorker from './serviceWorker';
+import './index.css';
 
 export const store = createStore(rootReducer, 
                           applyMiddleware(thunkMiddleware));

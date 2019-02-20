@@ -1,47 +1,104 @@
 import React from 'react';
+import styled from 'styled-components';
 
+const CompanyInfoWrapper = styled.div`
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+`;
+const MainInfo = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+`;
+const DescriptionWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+`;
+const TagsWrapper = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    flex-grow: 3;
+`;
+const CompanyName = styled.div`
+
+`;
+const BasicInfo = styled.div``;
+const BasicInfoElement = styled.div`
+    display: flex;
+    width: 100%;
+    .info-key {
+        width: 30%;
+        text-align: end;
+        padding-right: 1em;
+    }
+    .info-key:first-letter {
+        text-transform:capitalize;
+    }
+    .info-value {
+        width: 70%;
+    }
+`;
+const Description = styled.div``;
+const Tag = styled.div`
+    padding: 1em;
+    span::before {
+        content: '#'
+    }
+`;
 const CompanyInfo = ({ data, isFetching }) => {
-    const { copanyName, 
-            description,
+    const { companyName,
             tags } = data;
     const basicInfo = () => {
         return ['industry', 'sector', 'CEO', 'exchange'].map(infoKey => {
             if(!data[infoKey]) return '';
             return(
-                <BasicInfoElemment>
+                <BasicInfoElement key={infoKey}>
                     <div className='info-key'>{infoKey}</div>
                     <div className='info-value'>{data[infoKey]}</div>
-                </BasicInfoElemment>
+                </BasicInfoElement>
             );
         }) 
     }
     const website = () => {
         const website = data['website'];
-        if(data[website]) return '';
+        if(!website) return '';
         return(
-            <BasicInfoElemment>
+            <BasicInfoElement>
                 <div className='info-key'>Website</div>
                 <div className='info-value'>
-                    <a href={website} />
+                    <a href={website}>{website}</a>
                 </div>
-            </BasicInfoElemment>
+            </BasicInfoElement>
         );
     }
     const description = () => {
-        const description = data['description'];
-        if(data[description]) return(
+        const descriptionText = data['description'];
+        if(descriptionText) return(
             <Description>
-                <h3>Description</h3>
-                <p>{description}</p>
+                <h4>Description</h4>
+                <p>{descriptionText}</p>
             </Description>
         );
+    }
+    const tagsCollection = () => {
+        if(tags && tags.length > 0) {
+            return tags.map((tag, index) => (
+                <Tag key={index}>
+                    <span>{tag}</span>
+                </Tag>
+            ));
+        }
     }
     return (
         <CompanyInfoWrapper>
             <MainInfo>
                 <CompanyName>
                     <h2>
-                        {copanyName}
+                        {companyName}
                     </h2>
                 </CompanyName>
                 <BasicInfo>
@@ -52,9 +109,9 @@ const CompanyInfo = ({ data, isFetching }) => {
             <DescriptionWrapper>
                 {description()}
             </DescriptionWrapper>
-            <Tags>
-                {tags}
-            </Tags>
+            <TagsWrapper>
+                {tagsCollection()}
+            </TagsWrapper>
         </CompanyInfoWrapper> 
     )
 }
