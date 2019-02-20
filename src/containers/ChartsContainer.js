@@ -4,21 +4,15 @@ import * as periodActions from '../actions/periodActions';
 import * as companyDataActions from '../actions/companyDataActions';
 import * as companySymbolActions from '../actions/companySymbolActions';
 import * as uiNotificationsActions from '../actions/uiNotificationsActions';
-import SearchForm from '../components/SearchForm';
-import PeriodSelector from '../components/PeriodSelector';
 import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import Popup from '../components/Popup';
+import Header from '../components/Header';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 
 const ChartsWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-const Search = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -76,12 +70,10 @@ class Charts extends Component {
     render(){
         return(
             <ChartsWrapper>
-                <Search>
-                    <SearchForm onSubmit={this.onSearchSubmit} />
-                    <PeriodSelector onChange={this.onChangePeriod} 
-                                    currPeriod={this.props.period}
-                                    allPeriods={this.props.allPeriods} />
-                </Search>
+                <Header onSearchSubmit={this.onSearchSubmit}
+                        onChangePeriod={this.onChangePeriod}
+                        currPeriod={this.props.period}
+                        allPeriods={this.props.allPeriods} />
                 <Content>
                     <CompanyInfo data={this.props.companyInfo.data}
                                 isFetching={this.props.companyInfo.isFetching} />
