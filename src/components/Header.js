@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SearchForm from '../components/SearchForm';
-import PeriodSelector from '../components/PeriodSelector';
 import styled from 'styled-components';
 
 const HeaderWrapper = styled.div`
@@ -45,9 +44,6 @@ export default class Header extends Component {
                     <Navigation />
                     <Search>
                         <SearchForm onSubmit={this.props.onSearchSubmit} />
-                        <PeriodSelector onChange={this.props.onChangePeriod} 
-                                        currPeriod={this.props.period}
-                                        allPeriods={this.props.allPeriods} />
                     </Search>
                 </HeaderContent>
             </HeaderWrapper>

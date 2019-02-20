@@ -7,6 +7,7 @@ import * as uiNotificationsActions from '../actions/uiNotificationsActions';
 import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import Popup from '../components/Popup';
+import PeriodSelector from '../components/PeriodSelector';
 import Header from '../components/Header';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -70,11 +71,11 @@ class Charts extends Component {
     render(){
         return(
             <ChartsWrapper>
-                <Header onSearchSubmit={this.onSearchSubmit}
-                        onChangePeriod={this.onChangePeriod}
-                        currPeriod={this.props.period}
-                        allPeriods={this.props.allPeriods} />
+                <Header onSearchSubmit={this.onSearchSubmit} />
                 <Content>
+                    <PeriodSelector onChange={this.onChangePeriod} 
+                                    currPeriod={this.props.currPeriod}
+                                    allPeriods={this.props.allPeriods} />
                     <CompanyInfo data={this.props.companyInfo.data}
                                 isFetching={this.props.companyInfo.isFetching} />
                     <CompanyChartsCollection data={this.props.chartPoints.data} 
