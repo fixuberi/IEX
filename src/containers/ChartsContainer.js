@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import * as chartPointsActions from '../actions/chartPointsActions';
-import * as periodActions from '../actions/periodActions';
-import * as companyDataActions from '../actions/companyDataActions';
-import * as companySymbolActions from '../actions/companySymbolActions';
-import * as uiNotificationsActions from '../actions/uiNotificationsActions';
 import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
-import Popup from '../components/Popup';
 import PeriodSelector from '../components/PeriodSelector';
-import Header from '../components/Header';
+import * as chartPointsActions from '../actions/chartPointsActions';
+import * as periodActions from '../actions/periodActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
@@ -24,34 +19,13 @@ const Content = styled.div`
     align-items: center;
     width: 100%;
 `;
-const PopupWrapper = styled.div`
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30%;
-`;
 
 class Charts extends Component {
     constructor(props) {
         super(props);
-        this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.onChangePeriod = this.onChangePeriod.bind(this);
-        this.popup = React.createRef();
     }
-    async onSearchSubmit(companySymbol){
-        const {chartActions, currPeriod} = this.props;
-        try {
-            await chartActions.setCompanySymbol(companySymbol);
-            await chartActions.fetchCompanyData(companySymbol);
-            await chartActions.fetchChartPoints(companySymbol, currPeriod);
-        } catch (error) {
-            await chartActions.clearCompanyData();
-            await chartActions.clearChartPoints();
-            await chartActions.addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
-            await this.showError(this.props.uiNotifications.errors);
-            console.error(error);
-        }
-    }
+
     async onChangePeriod(period) {
         try {
             const { chartActions, companySymbol } = this.props;
@@ -61,18 +35,11 @@ class Charts extends Component {
             console.log(error)
         }
     }
-    showError(errors) {
-        errors.forEach((el) => {
-            this.popup.current.error({ msg: el}, 2000);
-        });
-        this.props.chartActions.clearAllMessages();
-    }
-    
+
     render(){
         return(
             <ChartsWrapper>
-                <Header onSearchSubmit={this.onSearchSubmit} />
-                <Content>
+               <Content>
                     <PeriodSelector onChange={this.onChangePeriod} 
                                     currPeriod={this.props.currPeriod}
                                     allPeriods={this.props.allPeriods} />
@@ -81,9 +48,6 @@ class Charts extends Component {
                     <CompanyChartsCollection data={this.props.chartPoints.data} 
                                             isFetching={this.props.chartPoints.isFetching} />
                 </Content>
-                <PopupWrapper>
-                    <Popup ref={this.popup} />
-                </PopupWrapper>
             </ChartsWrapper>
         )
     }
@@ -95,18 +59,14 @@ const mapStateToProps = (state) => {
         currPeriod: state.period,
         companyInfo: state.companyData,
         chartPoints: state.chartPoints,
-        allPeriods: periodActions.availablePeriods.getSortedArray(),
-        uiNotifications: state.uiNotifications,     
+        allPeriods: periodActions.availablePeriods.getSortedArray()
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
         chartActions: bindActionCreators(Object.assign({},
             chartPointsActions,
-            periodActions,
-            companyDataActions,
-            companySymbolActions,
-            uiNotificationsActions
+            periodActions
             ), dispatch)
     }
 }
@@ -115,5 +75,4 @@ const ChartsContainer = connect(
     mapStateToProps,
     mapDispatchToProps
 )(Charts);
-
 export default ChartsContainer;
