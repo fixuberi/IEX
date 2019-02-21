@@ -3,12 +3,14 @@ import SearchForm from '../components/SearchForm';
 import Popup from '../components/Popup';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import * as chartPointsActions from '../actions/chartPointsActions';
 import * as periodActions from '../actions/periodActions';
 import * as companyDataActions from '../actions/companyDataActions';
 import * as companySymbolActions from '../actions/companySymbolActions';
 import * as uiNotificationsActions from '../actions/uiNotificationsActions';
 import styled from 'styled-components';
+import ChartsContainer from './ChartsContainer';
 
 const HeaderWrapper = styled.div`
     width: 100vw;
@@ -18,8 +20,8 @@ const HeaderWrapper = styled.div`
     top: 0;
     left: 0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    z-index: 99;
 `;
 const GoBackButton = styled.div`
     height: 100%;
@@ -30,9 +32,16 @@ const GoBackButton = styled.div`
 const HeaderContent = styled.div`
     display: flex;
     justify-content: space-between;
+    flex-grow: 10;
 `;
 const Navigation = styled.div`
-
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    a {
+        color: white;
+        text-decoration: none;
+    }
 `;
 const Search = styled.div`
     display: flex;
@@ -81,7 +90,9 @@ class Header extends Component {
             <HeaderWrapper>
                 <GoBackButton />
                 <HeaderContent>
-                    <Navigation />
+                    <Navigation>
+                        <Link to='/search' component={ChartsContainer}>Search</Link>
+                    </Navigation>
                     <Search>
                         <SearchForm onSubmit={this.onHeaderSearchSubmit.bind(this)} />
                     </Search>
