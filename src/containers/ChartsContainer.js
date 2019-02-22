@@ -3,10 +3,8 @@ import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import PeriodSelector from '../components/PeriodSelector';
 import Popup from '../components/Popup';
-import * as chartPointsActions from '../actions/chartPointsActions';
-import * as periodActions from '../actions/periodActions';
-import * as companyDataActions from '../actions/companyDataActions';
-import * as companySymbolActions from '../actions/companySymbolActions';
+import { availablePeriods } from '../actions/chartsActions';
+import * as chartsActions from '../actions/chartsActions';
 import * as uiNotificationsActions from '../actions/uiNotificationsActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -37,7 +35,7 @@ class Charts extends Component {
         this.popup = React.createRef();
     }
     async onSearchSubmit(companySymbol){
-        const {chartActions, currPeriod} = this.props;
+        const {chartActions, uiActions, currPeriod} = this.props;
         try {
             await chartActions.setCompanySymbol(companySymbol);
             await chartActions.fetchCompanyData(companySymbol);
@@ -45,7 +43,7 @@ class Charts extends Component {
         } catch (error) {
             await chartActions.clearCompanyData();
             await chartActions.clearChartPoints();
-            await chartActions.addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
+            await uiActions.addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
             await this.showError(this.props.uiNotifications.errors);
             console.error(error);
         }
@@ -54,7 +52,7 @@ class Charts extends Component {
         errors.forEach((el) => {
             this.popup.current.error({ msg: el}, 2000);
         });
-        this.props.chartActions.clearAllMessages();
+        this.props.uiActions.clearAllMessages();
     }
     async onChangePeriod(period) {
         try {
@@ -101,19 +99,14 @@ const mapStateToProps = (state) => {
         currPeriod: state.period,
         companyInfo: state.companyData,
         chartPoints: state.chartPoints,
-        allPeriods: periodActions.availablePeriods.getSortedArray(),
+        allPeriods: availablePeriods.getSortedArray(),
         uiNotifications: state.uiNotifications
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        chartActions: bindActionCreators(Object.assign({},
-            chartPointsActions,
-            periodActions,
-            companyDataActions,
-            companySymbolActions,
-            uiNotificationsActions
-            ), dispatch)
+        chartActions: bindActionCreators(chartsActions, dispatch),
+        uiActions: bindActionCreators(uiNotificationsActions, dispatch)
     }
 }
 
