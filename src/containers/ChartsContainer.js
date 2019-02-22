@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import PeriodSelector from '../components/PeriodSelector';
+import Popup from '../components/Popup';
 import * as chartPointsActions from '../actions/chartPointsActions';
 import * as periodActions from '../actions/periodActions';
+import * as companyDataActions from '../actions/companyDataActions';
+import * as companySymbolActions from '../actions/companySymbolActions';
+import * as uiNotificationsActions from '../actions/uiNotificationsActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
@@ -19,13 +23,39 @@ const Content = styled.div`
     align-items: center;
     width: 100%;
 `;
+const PopupWrapper = styled.div`
+    position: absolute;
+    top: 10vh;
+    right: 0;
+    width: 30%;
+`;
 
 class Charts extends Component {
     constructor(props) {
         super(props);
         this.onChangePeriod = this.onChangePeriod.bind(this);
+        this.popup = React.createRef();
     }
-
+    async onSearchSubmit(companySymbol){
+        const {chartActions, currPeriod} = this.props;
+        try {
+            await chartActions.setCompanySymbol(companySymbol);
+            await chartActions.fetchCompanyData(companySymbol);
+            await chartActions.fetchChartPoints(companySymbol, currPeriod);
+        } catch (error) {
+            await chartActions.clearCompanyData();
+            await chartActions.clearChartPoints();
+            await chartActions.addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
+            await this.showError(this.props.uiNotifications.errors);
+            console.error(error);
+        }
+    }
+    showError(errors) {
+        errors.forEach((el) => {
+            this.popup.current.error({ msg: el}, 2000);
+        });
+        this.props.chartActions.clearAllMessages();
+    }
     async onChangePeriod(period) {
         try {
             const { chartActions, companySymbol } = this.props;
@@ -35,7 +65,16 @@ class Charts extends Component {
             console.log(error)
         }
     }
-
+    componentDidMount() {
+        const { chartActions } = this.props;
+        const symbol = this.props.match.params.symbol;
+        chartActions.clearCompanyData();
+        if(symbol) this.onSearchSubmit(symbol);
+    }
+    componentDidUpdate(prevProps, prevState) {
+        const symbol = this.props.match.params.symbol;
+        if(symbol!==prevProps.match.params.symbol) this.onSearchSubmit(symbol);
+    }
     render(){
         return(
             <ChartsWrapper>
@@ -48,6 +87,9 @@ class Charts extends Component {
                     <CompanyChartsCollection data={this.props.chartPoints.data} 
                                             isFetching={this.props.chartPoints.isFetching} />
                 </Content>
+                <PopupWrapper>
+                    <Popup ref={this.popup} />
+                </PopupWrapper>
             </ChartsWrapper>
         )
     }
@@ -59,14 +101,18 @@ const mapStateToProps = (state) => {
         currPeriod: state.period,
         companyInfo: state.companyData,
         chartPoints: state.chartPoints,
-        allPeriods: periodActions.availablePeriods.getSortedArray()
+        allPeriods: periodActions.availablePeriods.getSortedArray(),
+        uiNotifications: state.uiNotifications
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
         chartActions: bindActionCreators(Object.assign({},
             chartPointsActions,
-            periodActions
+            periodActions,
+            companyDataActions,
+            companySymbolActions,
+            uiNotificationsActions
             ), dispatch)
     }
 }

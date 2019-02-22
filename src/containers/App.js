@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import HeaderContainer from './HeaderContainer';
+import HeaderWithRouter from '../components/Header';
 import routes from '../routes'
 import { BrowserRouter as Router } from 'react-router-dom';
-import { withRouter } from 'react-router';
-
-const HeaderContainerWithRouter = withRouter(HeaderContainer);
 
 export default class App extends Component {
     constructor(props) {
@@ -14,7 +11,7 @@ export default class App extends Component {
         return(
             <Router>
                 <div>
-                    <HeaderContainerWithRouter />
+                    <HeaderWithRouter />
                     {routes} 
                 </div>
             </Router>

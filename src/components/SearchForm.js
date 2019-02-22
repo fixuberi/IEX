@@ -14,7 +14,6 @@ export default class SearchForm extends Component {
       event.preventDefault();
       this.props.onSubmit(this.state.symbol);
     }
-  
     render() {
       return (
         <form onSubmit={this.handleSubmit}>
