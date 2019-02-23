@@ -35,7 +35,7 @@ class Charts extends Component {
         this.popup = React.createRef();
     }
     async onSearchSubmit(companySymbol){
-        const {chartActions, uiActions, currPeriod} = this.props;
+        const {chartActions, uiNotificationsActions, currPeriod} = this.props;
         try {
             await chartActions.setCompanySymbol(companySymbol);
             await chartActions.fetchCompanyData(companySymbol);
@@ -43,16 +43,16 @@ class Charts extends Component {
         } catch (error) {
             await chartActions.clearCompanyData();
             await chartActions.clearChartPoints();
-            await uiActions.addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
+            await uiNotificationsActions.addNonExistentCompanyError(companySymbol);
             await this.showError(this.props.uiNotifications.errors);
             console.error(error);
         }
     }
     showError(errors) {
         errors.forEach((el) => {
-            this.popup.current.error({ msg: el}, 2000);
+            this.popup.current.error({ msg: el}, 5000);
         });
-        this.props.uiActions.clearAllMessages();
+        this.props.uiNotificationsActions.clearAllMessages();
     }
     async onChangePeriod(period) {
         try {
@@ -106,7 +106,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         chartActions: bindActionCreators(chartsActions, dispatch),
-        uiActions: bindActionCreators(uiNotificationsActions, dispatch)
+        uiNotificationsActions: bindActionCreators(uiNotificationsActions, dispatch)
     }
 }
 

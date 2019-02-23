@@ -1,3 +1,4 @@
+//chartsActions
 export const REQUEST_CHART_POINTS = 'REQUEST_CHART_POINTS';
 export const RECIVE_CHART_POINTS = 'RECIVE_CHART_POINTS';
 export const CLEAR_CHART_POINTS = 'CLEAR_CHART_POINTS';
@@ -10,3 +11,7 @@ export const SET_COMPANY_SYMBOL = 'SET_COMPANY_SYMBOL';
 export const CLEAR_COMPANY_SYMBOL = 'CLEAR_COMPANY_SYMBOL';
 
 export const SET_PERIOD = 'SET_PERIOD';
+
+//uiNotificationsActions
+export const ADD_ERROR_MESSAGE = 'ADD_ERROR_MESSAGE';
+export const CLEAR_ALL_MESSAGES = 'CLEAR_ALL_MESSAGES';
