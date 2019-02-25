@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import PeriodSelector from '../components/PeriodSelector';
-import Popup from '../components/Popup';
+import PopupContainer from '../components/Popup';
 import { availablePeriods } from '../actions/chartsActions';
 import * as chartsActions from '../actions/chartsActions';
 import * as uiNotificationsActions from '../actions/uiNotificationsActions';
@@ -44,16 +44,18 @@ class Charts extends Component {
             await chartActions.clearCompanyData();
             await chartActions.clearChartPoints();
             await uiNotificationsActions.addNonExistentCompanyError(companySymbol);
-            await this.showError(this.props.uiNotifications.errors);
+            // await this.showError(this.props.uiNotifications.errors);
+            debugger;
+            await this.popup.current.showAllErrorsWithDelay(5000);
             console.error(error);
         }
     }
-    showError(errors) {
-        errors.forEach((el) => {
-            this.popup.current.error({ msg: el}, 5000);
-        });
-        this.props.uiNotificationsActions.clearAllMessages();
-    }
+    // showError(errors) {
+    //     errors.forEach((el) => {
+    //         this.popup.current.error({ msg: el}, 5000);
+    //     });
+    //     this.props.uiNotificationsActions.clearErrorMessages();
+    // }
     async onChangePeriod(period) {
         try {
             const { chartActions, companySymbol } = this.props;
@@ -85,9 +87,7 @@ class Charts extends Component {
                     <CompanyChartsCollection data={this.props.chartPoints.data} 
                                             isFetching={this.props.chartPoints.isFetching} />
                 </Content>
-                <PopupWrapper>
-                    <Popup ref={this.popup} />
-                </PopupWrapper>
+                <PopupContainer ref={this.popup} />
             </ChartsWrapper>
         )
     }

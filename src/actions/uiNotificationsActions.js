@@ -1,6 +1,7 @@
 import {
     ADD_ERROR_MESSAGE,
-    CLEAR_ALL_MESSAGES
+    CLEAR_ALL_MESSAGES,
+    CLEAR_ERROR_MESSAGES,
 } from './constants';
 
 function addErrorMessage(errMsg) {
@@ -15,5 +16,10 @@ export function addNonExistentCompanyError(companySymbol) {
 export function clearAllMessages() {
     return {
         type: CLEAR_ALL_MESSAGES
+    }
+}
+export function clearErrorMessages() {
+    return {
+        type: CLEAR_ERROR_MESSAGES
     }
 }

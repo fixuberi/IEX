@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
+import * as uiNotificationsActions from '../actions/uiNotificationsActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-export default class Popup extends Component {
+class Popup extends Component {
     constructor() {
         super();
         this.count = 0;
         this.state = {};
+    }
+    showAllErrorsWithDelay(delay) {
+        this.props.uiNotifications.errors.forEach((el) => {
+            this.popup.current.error({ msg: el}, delay);
+        }); 
+        this.props.uiNotificationsActions.clearErrorMessages();
     }
     error(data, delay) {
         this.addNotification(data, delay, 'error');
@@ -45,3 +54,20 @@ export default class Popup extends Component {
         )
     } 
 }
+
+const mapStateToProps = (state) => {
+    return { 
+        uiNotifications: state.uiNotifications
+     }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        uiNotificationsActions: bindActionCreators(uiNotificationsActions, dispatch)
+    }
+}
+
+const PopupContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Popup);
+export default PopupContainer;
