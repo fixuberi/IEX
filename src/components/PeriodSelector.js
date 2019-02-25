@@ -24,10 +24,11 @@ export default class PeriodSelector extends Component {
     }
     render() {
         return (
-            <select onChange={this.handleChange}>
-                {this.props.allPeriods.map(el => (
-                    <option key={el} value={el}>{this.humanizePeriod(el)}</option>
-                ))}
+            <select value={this.props.currPeriod} 
+                    onChange={this.handleChange}>
+                {this.props.allPeriods.map(el => {
+                    return (<option key={el} value={el}>{this.humanizePeriod(el)}</option>)
+                })}
             </select>
         )
     }

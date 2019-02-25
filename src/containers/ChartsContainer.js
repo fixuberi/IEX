@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CompanyInfo from '../components/CompanyInfo';
 import CompanyChartsCollection from '../components/CompanyChartsCollection';
 import PeriodSelector from '../components/PeriodSelector';
-import PopupContainer from '../components/Popup';
+import Popup from '../components/Popup';
 import { availablePeriods } from '../actions/chartsActions';
 import * as chartsActions from '../actions/chartsActions';
 import * as uiNotificationsActions from '../actions/uiNotificationsActions';
@@ -44,36 +44,41 @@ class Charts extends Component {
             await chartActions.clearCompanyData();
             await chartActions.clearChartPoints();
             await uiNotificationsActions.addNonExistentCompanyError(companySymbol);
-            // await this.showError(this.props.uiNotifications.errors);
-            debugger;
-            await this.popup.current.showAllErrorsWithDelay(5000);
+            await this.showAllErrorsWithDelay(5000);
             console.error(error);
         }
     }
-    // showError(errors) {
-    //     errors.forEach((el) => {
-    //         this.popup.current.error({ msg: el}, 5000);
-    //     });
-    //     this.props.uiNotificationsActions.clearErrorMessages();
-    // }
+    showAllErrorsWithDelay(delay) {
+        this.props.uiNotifications.errors.forEach((el) => {
+            this.popup.current.error({ msg: el}, delay);
+        });
+        this.props.uiNotificationsActions.clearErrorMessages();
+    }
     async onChangePeriod(period) {
         try {
             const { chartActions, companySymbol } = this.props;
             await chartActions.setPeriod(period);
+            await chartActions.clearChartPoints();
             if(companySymbol) chartActions.fetchChartPoints(companySymbol, period);
         } catch(error) {
             console.log(error)
         }
     }
-    componentDidMount() {
+    async componentDidMount() {
         const { chartActions } = this.props;
         const symbol = this.props.match.params.symbol;
-        chartActions.clearCompanyData();
+        await chartActions.clearCompanyData();
+        await chartActions.clearChartPoints();
         if(symbol) this.onSearchSubmit(symbol);
     }
-    componentDidUpdate(prevProps, prevState) {
+    async componentDidUpdate(prevProps, prevState) {
         const symbol = this.props.match.params.symbol;
-        if(symbol!==prevProps.match.params.symbol) this.onSearchSubmit(symbol);
+        const { chartActions } = this.props;
+        if(symbol!==prevProps.match.params.symbol) {
+            await chartActions.clearCompanyData();
+            await chartActions.clearChartPoints();
+            if(symbol) this.onSearchSubmit(symbol);
+        } 
     }
     render(){
         return(
@@ -87,18 +92,21 @@ class Charts extends Component {
                     <CompanyChartsCollection data={this.props.chartPoints.data} 
                                             isFetching={this.props.chartPoints.isFetching} />
                 </Content>
-                <PopupContainer ref={this.popup} />
+                <PopupWrapper>
+                    <Popup ref={this.popup} />
+                </PopupWrapper>
             </ChartsWrapper>
         )
     }
 }
 
 const mapStateToProps = (state) => {
+    const chartsPage = state.chartsPage;
     return {
-        companySymbol: state.companySymbol,
-        currPeriod: state.period,
-        companyInfo: state.companyData,
-        chartPoints: state.chartPoints,
+        companySymbol: chartsPage.companySymbol,
+        currPeriod: chartsPage.period,
+        companyInfo: chartsPage.companyData,
+        chartPoints: chartsPage.chartPoints,
         allPeriods: availablePeriods.getSortedArray(),
         uiNotifications: state.uiNotifications
     }

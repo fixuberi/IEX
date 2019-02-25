@@ -33,6 +33,7 @@ const Navigation = styled.div`
     a {
         color: white;
         text-decoration: none;
+        padding-right: 1em;
     }
 `;
 const Search = styled.div`
@@ -55,6 +56,7 @@ class Header extends Component {
                 <GoBackButton />
                 <HeaderContent>
                     <Navigation>
+                        <Link to='/'>Home</Link>
                         <Link to='/search'>Charts</Link>
                     </Navigation>
                     <Search>

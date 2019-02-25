@@ -13,75 +13,82 @@ import {
     SET_PERIOD,
 } from '../actions/constants';
 import { availablePeriods } from '../actions/chartsActions';
+var deepExtend = require('deep-extend');
 
 const initialState = {
-    chartPoints: {
-        data: [],
-        isFetching: false,
-    },
-    companyData: {
-        data: {},
-        isFetching: false,
-    },
-    companySymbol: '',
-    period: availablePeriods.ONE_MONTH
+    chartsPage: {
+        chartPoints: {
+            data: [],
+            isFetching: false,
+        },
+        companyData: {
+            data: {},
+            isFetching: false,
+        },
+        companySymbol: '',
+        period: availablePeriods.ONE_MONTH
+    }
 }
-
-export function chartPoints(state = initialState.chartPoints, action) {
+export function chartsPage(state = initialState.chartsPage, action) {
+    let stateUpdate;
     switch(action.type) {
         case REQUEST_CHART_POINTS: 
-            return Object.assign({}, state, { isFetching: true });
+            stateUpdate = { chartPoints: {
+                    isFetching: true
+                }
+            };
+            return deepExtend({}, state, stateUpdate);
+
         case RECIVE_CHART_POINTS: 
-            return Object.assign({}, state, {
-                isFetching: false,
-                data: action.data
-            });
+            stateUpdate = { chartPoints: {
+                    isFetching: false,
+                    data: action.data
+                }
+            };
+            return deepExtend({}, state, stateUpdate);
+
         case CLEAR_CHART_POINTS: 
-            return Object.assign({}, state, {
-                isFetching: false,
-                data: []
-            });
-        default: 
-            return state;
-    }
-}
+            stateUpdate = { chartPoints: {
+                    isFetching: false,
+                    data: []
+                }
+            };
+            return deepExtend({}, state, stateUpdate);
 
-export function companyData(state = initialState.companyData, action) {
-    switch(action.type) {
-        case REQUEST_COMPANY_DATA:
-            return Object.assign({}, state, { isFetching: true });
+        case REQUEST_COMPANY_DATA: 
+            stateUpdate = { companyData: {
+                    isFetching: true
+                }
+            };
+            return deepExtend({}, state, stateUpdate);
+
         case RECIVE_COMPANY_DATA: 
-            return Object.assign({}, state, {
-                isFetching: false,
-                data: action.data
-            });
+            stateUpdate = { companyData: {
+                    isFetching: false,
+                    data: action.data
+                }
+            };
+            return deepExtend({}, state, stateUpdate);
+
         case CLEAR_COMPANY_DATA: 
-            return Object.assign({}, state, {
-                isFetching: false,
-                data: {}
-            })
-        default:
-            return state;
-    }
-}
+            stateUpdate = { companyData: {
+                    isFetching: false,
+                    data: []
+                }
+            };
+            return deepExtend({}, state, stateUpdate);
 
-export function companySymbol(state = initialState.companySymbol, action) {
-    switch(action.type) {
         case SET_COMPANY_SYMBOL: 
-            return action.symbol;
+            stateUpdate = { companySymbol: action.symbol };
+            return deepExtend({}, state, stateUpdate);
+
         case CLEAR_COMPANY_SYMBOL: 
-            return '';
-        default:
-            return state;
-    }
-}
-
-export function period(state = initialState.period, action) {
-    switch(action.type) {
+            stateUpdate = { companySymbol: initialState.chartsPage.companySymbol };
+            return deepExtend({}, state, stateUpdate);
         case SET_PERIOD: 
-            return action.period;
+            stateUpdate = { period: action.period };
+            return deepExtend({}, state, stateUpdate);
         default: 
-            return state;
+            return state;     
     }
 }
-
