@@ -30,3 +30,11 @@ export function login(user, history) {
         })
     }
 }
+export function logout(history) {
+    const user = User.getIdentity();
+    return () => {
+        user.logout().done(() => {
+            history.push('/')
+        })
+    }
+}

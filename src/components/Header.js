@@ -3,6 +3,9 @@ import SearchForm from './SearchForm';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { withRouter } from 'react-router';
+import * as userActions from '../actions/userActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 const HeaderWrapper = styled.div`
     width: 100vw;
@@ -50,6 +53,9 @@ class Header extends Component {
     onHeaderSearchSubmit = (str) => {
         this.props.history.push(`/search/${str}`);
     }
+    onLogOutClick = () => {
+        this.props.userActions.logout(this.props.history);
+    }
     render() {
         return(
             <HeaderWrapper>
@@ -65,12 +71,21 @@ class Header extends Component {
                     <Navigation>
                         <Link to='/signup'>SignUp</Link>
                         <Link to='/signin'>SignIn</Link>
+                        <a onClick={this.onLogOutClick}>LogOut</a>
                     </Navigation>
                 </HeaderContent>
             </HeaderWrapper>
         ) 
     }
 }
-
-const HeaderWithRouter = withRouter(Header);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        userActions: bindActionCreators(userActions, dispatch)
+    }
+}
+const mapStateToProps = (state) => {
+    return {}
+}
+const headerWithDispatch = connect(mapStateToProps, mapDispatchToProps)(Header);
+const HeaderWithRouter = withRouter(headerWithDispatch);
 export default HeaderWithRouter; 
