@@ -14,5 +14,6 @@ export const SET_PERIOD = 'SET_PERIOD';
 
 //uiNotificationsActions
 export const ADD_ERROR_MESSAGE = 'ADD_ERROR_MESSAGE';
+export const ADD_ALLERT_MESSAGE = 'ADD_ALLERT_MESSAGE'
 export const CLEAR_ALL_MESSAGES = 'CLEAR_ALL_MESSAGES';
 export const CLEAR_ERROR_MESSAGES = 'CLEAR_ERROR_MESSAGES';

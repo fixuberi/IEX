@@ -62,6 +62,9 @@ class Header extends Component {
                     <Search>
                         <SearchForm onSubmit={this.onHeaderSearchSubmit} />
                     </Search>
+                    <Navigation>
+                        <Link to='/signup'>SignUp</Link>
+                    </Navigation>
                 </HeaderContent>
             </HeaderWrapper>
         ) 

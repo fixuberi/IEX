@@ -1,14 +1,27 @@
 import {
     ADD_ERROR_MESSAGE,
+    ADD_ALLERT_MESSAGE,
     CLEAR_ALL_MESSAGES,
     CLEAR_ERROR_MESSAGES,
 } from './constants';
 
-function addErrorMessage(errMsg) {
+function addErrorMessage(msg) {
     return {
         type: ADD_ERROR_MESSAGE,
-        errMsg
+        msg
     }
+}
+function addAlertMessage(msg) {
+    return {
+        type: ADD_ALLERT_MESSAGE,
+        msg
+    }
+}
+export function addSuccessfulRegistrationAlert() {
+    return addAlertMessage(`Registration complete!`)
+}
+export function addFailureRegistrationError(reason) {
+    return addErrorMessage(`Registration failed! ${reason}`)
 }
 export function addNonExistentCompanyError(companySymbol) {
     return addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);

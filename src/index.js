@@ -9,6 +9,8 @@ import { rootReducer } from './reducers';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
 
+const OAuth = require('oauthio-web').OAuth;
+OAuth.initialize('c6BbZQ_tjLtlSqIrVoFg6jeHEn4');
 export const store = createStore(rootReducer, 
                           applyMiddleware(thunkMiddleware));
 
