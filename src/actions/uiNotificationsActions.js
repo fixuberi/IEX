@@ -23,6 +23,12 @@ export function addSuccessfulRegistrationAlert() {
 export function addFailureRegistrationError(reason) {
     return addErrorMessage(`Registration failed! ${reason}`)
 }
+export function addSuccessfulLoginAlert(user) {
+    return addAlertMessage(`Successfuly logged in as ${user.firstname} ${user.lastname}`)
+}
+export function addFailureLoginError(reason) {
+    return addErrorMessage(`Login failed! ${reason}`)
+}
 export function addNonExistentCompanyError(companySymbol) {
     return addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
 }

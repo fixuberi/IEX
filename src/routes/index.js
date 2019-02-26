@@ -4,12 +4,14 @@ import ChartsContainer from '../containers/ChartsContainer';
 import Home from '../components/Home';
 import NotFound from '../components/NotFound';
 import { RegistrationContainer } from '../containers/RegistrationContainer';
+import { LoginContainer } from '../containers/LoginContainer';
 
 export default (
         <Switch>            
             <Route exact path="/" component={Home}/>
             <Route exact path="/search/" component={ChartsContainer}/>
             <Route exact path="/signup" component={RegistrationContainer}/>
+            <Route exact path="/signin" component={LoginContainer}/>
             <Route exact path="/search/:symbol" component={ChartsContainer}/>
             <Route component={NotFound}/>
         </Switch>

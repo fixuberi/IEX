@@ -18,3 +18,15 @@ export function register(user, history) {
          });
     }
 }
+export function login(user, history) {
+    return dispatch => {
+        User.signin(user.email, user.password).done(function(user) {
+            const userData = user.data;
+            history.push('/');
+            dispatch(uiNotificationsActions.addSuccessfulLoginAlert(userData));    
+        }).fail(function(err) {
+            const reasonOfFail = err.message.split('[railsUm] ').pop();
+            dispatch(uiNotificationsActions.addFailureLoginError(reasonOfFail));
+        })
+    }
+}

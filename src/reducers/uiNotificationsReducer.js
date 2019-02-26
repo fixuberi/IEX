@@ -18,7 +18,7 @@ export function uiNotifications(state = initialState, action) {
             });
         case ADD_ALLERT_MESSAGE: 
             return Object.assign({}, state, {
-                alerts: state.errors.slice().concat(action.msg)
+                alerts: state.alerts.slice().concat(action.msg)
             })
         case CLEAR_ERROR_MESSAGES: 
             return Object.assign({}, state, {

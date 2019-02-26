@@ -64,6 +64,7 @@ class Header extends Component {
                     </Search>
                     <Navigation>
                         <Link to='/signup'>SignUp</Link>
+                        <Link to='/signin'>SignIn</Link>
                     </Navigation>
                 </HeaderContent>
             </HeaderWrapper>
