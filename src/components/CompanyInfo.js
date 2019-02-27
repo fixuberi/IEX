@@ -49,7 +49,12 @@ const Tag = styled.div`
         content: '#'
     }
 `;
-const CompanyInfo = ({ data, isFetching }) => {
+const CompanyLogo = styled.div`
+    img {
+        width: 100%;
+    }
+`;
+const CompanyInfo = ({ data, isFetching, isLogged, companyLogoUrl }) => {
     const { companyName,
             tags } = data;
     const basicInfo = () => {
@@ -93,9 +98,19 @@ const CompanyInfo = ({ data, isFetching }) => {
             ));
         }
     }
+    const companyLogo = () => {
+        if (isLogged && companyLogoUrl) {
+            return(
+                <CompanyLogo>
+                    <img src={companyLogoUrl} alt="company logo"></img>
+                </CompanyLogo>
+            )
+        }
+    }
     return (
         <CompanyInfoWrapper>
             <MainInfo>
+                {companyLogo()}
                 <CompanyName>
                     <h2>
                         {companyName}

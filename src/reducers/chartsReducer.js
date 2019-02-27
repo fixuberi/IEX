@@ -11,6 +11,10 @@ import {
     CLEAR_COMPANY_SYMBOL,
 
     SET_PERIOD,
+
+    REQUEST_COMPANY_LOGO,
+    RECIVE_COMPANY_LOGO,
+    CLEAR_COMPANY_LOGO,
 } from '../actions/constants';
 import { availablePeriods } from '../actions/chartsActions';
 var deepExtend = require('deep-extend');
@@ -26,7 +30,11 @@ const initialState = {
             isFetching: false,
         },
         companySymbol: '',
-        period: availablePeriods.ONE_MONTH
+        period: availablePeriods.ONE_MONTH,
+        companyLogo: {
+            imageUrl:'',
+            isFetching: false
+        }
     }
 }
 export function chartsPage(state = initialState.chartsPage, action) {
@@ -87,6 +95,23 @@ export function chartsPage(state = initialState.chartsPage, action) {
             return deepExtend({}, state, stateUpdate);
         case SET_PERIOD: 
             stateUpdate = { period: action.period };
+            return deepExtend({}, state, stateUpdate);
+
+        case REQUEST_COMPANY_LOGO: 
+            stateUpdate = { companyLogo: {
+                    isFetching: true
+                } 
+            };
+            return deepExtend({}, state, stateUpdate);
+        case RECIVE_COMPANY_LOGO:
+            stateUpdate = { companyLogo: {
+                    isFetching: false,
+                    imageUrl: action.imageUrl
+                } 
+            };
+            return deepExtend({}, state, stateUpdate);
+        case CLEAR_COMPANY_LOGO: 
+            stateUpdate = { companyLogo: initialState.chartsPage.companyLogo };
             return deepExtend({}, state, stateUpdate);
         default: 
             return state;     

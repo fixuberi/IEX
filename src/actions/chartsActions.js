@@ -11,6 +11,10 @@ import {
     CLEAR_COMPANY_SYMBOL,
 
     SET_PERIOD,
+
+    REQUEST_COMPANY_LOGO,
+    RECIVE_COMPANY_LOGO,
+    CLEAR_COMPANY_LOGO,
 } from './constants';
 
 export const availablePeriods = {
@@ -96,6 +100,30 @@ export function fetchCompanyData(symbol) {
         if(response.status === 404) throw 404;
         const json = await response.json();
         dispatch(reciveCompanyData(json));
+    }
+}
+
+function requestCompanyLogo() {
+    return { type: REQUEST_COMPANY_LOGO };
+}
+function reciveCompanyLogo(json) {
+    return {
+        type: RECIVE_COMPANY_LOGO,
+        imageUrl: json.url
+    }
+}
+export function clearCompanyLogo() {
+    return {
+        type: CLEAR_COMPANY_LOGO
+    }
+} 
+export function fetchCompanyLogo(symbol) {
+    return async function(dispatch) {
+        dispatch(requestCompanyLogo());
+        const response = await fetch(`https://api.iextrading.com/1.0/stock/${symbol}/logo`)
+        if(response.status === 404) throw 404;
+        const json = await response.json();
+        dispatch(reciveCompanyLogo(json));
     }
 }
 

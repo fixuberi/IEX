@@ -39,6 +39,7 @@ class Charts extends Component {
         try {
             await chartActions.setCompanySymbol(companySymbol);
             await chartActions.fetchCompanyData(companySymbol);
+            this.props.isLogged && await chartActions.fetchCompanyLogo(companySymbol);
             await chartActions.fetchChartPoints(companySymbol, currPeriod);
         } catch (error) {
             await chartActions.clearCompanyData();
@@ -69,6 +70,7 @@ class Charts extends Component {
         const symbol = this.props.match.params.symbol;
         await chartActions.clearCompanyData();
         await chartActions.clearChartPoints();
+        await chartActions.clearCompanyLogo();
         if(symbol) this.onSearchSubmit(symbol);
     }
     async componentDidUpdate(prevProps, prevState) {
@@ -77,6 +79,7 @@ class Charts extends Component {
         if(symbol!==prevProps.match.params.symbol) {
             await chartActions.clearCompanyData();
             await chartActions.clearChartPoints();
+            await chartActions.clearCompanyLogo();
             if(symbol) this.onSearchSubmit(symbol);
         } 
     }
@@ -88,7 +91,9 @@ class Charts extends Component {
                                     currPeriod={this.props.currPeriod}
                                     allPeriods={this.props.allPeriods} />
                     <CompanyInfo data={this.props.companyInfo.data}
-                                isFetching={this.props.companyInfo.isFetching} />
+                                companyLogoUrl={this.props.companyLogo.imageUrl}
+                                isFetching={this.props.companyInfo.isFetching}
+                                isLogged={this.props.isLogged} />
                     <CompanyChartsCollection data={this.props.chartPoints.data} 
                                             isFetching={this.props.chartPoints.isFetching} />
                 </Content>
@@ -107,6 +112,7 @@ const mapStateToProps = (state) => {
         currPeriod: chartsPage.period,
         companyInfo: chartsPage.companyData,
         chartPoints: chartsPage.chartPoints,
+        companyLogo: chartsPage.companyLogo,
         allPeriods: availablePeriods.getSortedArray(),
         uiNotifications: state.uiNotifications
     }
