@@ -56,7 +56,24 @@ class Header extends Component {
     onLogOutClick = () => {
         this.props.userActions.logout(this.props.history);
     }
+    getAuthLinks = () => {
+        const authCredentials = JSON.parse(localStorage.getItem('oio_auth'));
+        if(authCredentials && authCredentials.user && authCredentials.token) {
+            return (
+                <Navigation>
+                    <a onClick={this.onLogOutClick}>LogOut</a>
+                </Navigation>
+            )
+        }
+        return (
+            <Navigation>
+                <Link to='/signup'>SignUp</Link>
+                <Link to='/signin'>SignIn</Link>
+            </Navigation>
+        )
+    }
     render() {
+        const authLinks = this.getAuthLinks();
         return(
             <HeaderWrapper>
                 <GoBackButton />
@@ -68,11 +85,7 @@ class Header extends Component {
                     <Search>
                         <SearchForm onSubmit={this.onHeaderSearchSubmit} />
                     </Search>
-                    <Navigation>
-                        <Link to='/signup'>SignUp</Link>
-                        <Link to='/signin'>SignIn</Link>
-                        <a onClick={this.onLogOutClick}>LogOut</a>
-                    </Navigation>
+                    {authLinks}
                 </HeaderContent>
             </HeaderWrapper>
         ) 
