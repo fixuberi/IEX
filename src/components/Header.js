@@ -7,6 +7,8 @@ import * as userActions from '../actions/userActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+const User = require('oauthio-web').User;
+
 const HeaderWrapper = styled.div`
     width: 100vw;
     height: 10vh;
@@ -57,8 +59,8 @@ class Header extends Component {
         this.props.userActions.logout(this.props.history);
     }
     getAuthLinks = () => {
-        const authCredentials = JSON.parse(localStorage.getItem('oio_auth'));
-        if(authCredentials && authCredentials.user && authCredentials.token) {
+        const userAuthenticated = User.getIdentity();
+        if(userAuthenticated) {
             return (
                 <Navigation>
                     <a onClick={this.onLogOutClick}>LogOut</a>

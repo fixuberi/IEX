@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import * as userActions from '../actions/userActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import TextInput from '../components/common/TextInput';
+import EmailInput from '../components/common/EmailInput';
+import PasswordInput from '../components/common/PasswordInput';
+import FormWrapper from '../components/common/FormWrapper';
 class RegistrationContainer extends Component {
     constructor(props) {
         super(props);
@@ -46,52 +49,44 @@ class RegistrationContainer extends Component {
     render() {
         const { user, submitted } = this.state
         return(
-            <div>
-                <h2>Registering</h2>
+            <FormWrapper>
+                <h2>SignUp</h2>
                 <form onSubmit={this.handleSubmit}>
-                    <div>
-                        <label htmlFor="firstName">First name</label>
-                        <input type="text" name="firstName" value={user.firstName} onChange={this.handleChange}></input>
-                        { submitted && !user.firstName && 
-                            <div>First name is required!</div>
-                        }
-                    </div>
-                    <div>
-                        <label htmlFor="lastName">Last name</label>
-                        <input type="text" name="lastName" value={user.lastName} onChange={this.handleChange}></input>
-                        { submitted && !user.lastName && 
-                            <div>Last name is required!</div>
-                        }
-                    </div>
-                    <div>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" name="email" value={user.email} onChange={this.handleChange}></input>
-                        { submitted && !user.email && 
-                            <div>Email is required!</div>
-                        }
-                    </div>
-                    <div>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" name="password" value={user.password} onChange={this.handleChange} autoComplete='false'></input>
-                        { submitted && !user.password && 
-                            <div>Password is required!</div>
-                        }
-                    </div>
-                    <div>
-                        <label htmlFor="passwordConfirm">Password confirm</label>
-                        <input type="password" name="passwordConfirm" value={user.passwordConfirm} onChange={this.handleChange} autoComplete='false'></input>
-                        { submitted && !user.passwordConfirm && 
-                            <div>Password confirmation is required!</div>
-                        }
-                        { submitted && user.passwordConfirm != user.password && 
-                            <div>Passwords are not match!</div>
-                        }
-                    </div>
-                    <div>
-                        <input type="submit" value="Register"></input>
-                    </div>
+                    <TextInput  fieldName="firstName" 
+                                label="First name" 
+                                value={user.firstName} 
+                                onChange={this.handleChange} 
+                                formSubmitted={submitted} 
+                    />
+                    <TextInput  fieldName="lastName" 
+                                label="Last name" 
+                                value={user.lastName} 
+                                onChange={this.handleChange} 
+                                formSubmitted={submitted} 
+                    />
+                    <EmailInput fieldName="email" 
+                                label="Email" 
+                                value={user.email} 
+                                onChange={this.handleChange} 
+                                formSubmitted={submitted} 
+                    />
+                    <PasswordInput  fieldName="password" 
+                                    label="Password" 
+                                    value={user.password}
+                                    valueForCompare={user.passwordConfirm} 
+                                    onChange={this.handleChange} 
+                                    formSubmitted={submitted} 
+                    />
+                    <PasswordInput  fieldName="passwordConfirm" 
+                                    label="Password confirmation" 
+                                    value={user.passwordConfirm}
+                                    valueForCompare={user.password} 
+                                    onChange={this.handleChange} 
+                                    formSubmitted={submitted} 
+                    />
+                    <input type="submit" value="Register"></input>
                 </form>
-            </div>
+            </FormWrapper>
         )
     }
 }
