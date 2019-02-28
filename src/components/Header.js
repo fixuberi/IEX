@@ -63,6 +63,7 @@ class Header extends Component {
         if(userAuthenticated) {
             return (
                 <Navigation>
+                    <Link to='/profile'>Profile</Link>
                     <a onClick={this.onLogOutClick}>LogOut</a>
                 </Navigation>
             )

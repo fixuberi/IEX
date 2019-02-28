@@ -38,3 +38,20 @@ export function logout(history) {
         })
     }
 }
+export function updateUserInfo(info, history) {
+    const user = User.getIdentity();
+    Object.assign(user, {data: {...info}});
+    return dispatch => {
+        user.save().done(()=> {
+            history.push('/profile');
+            dispatch(uiNotificationsActions.addSuccessEditingUserInfoAlert());
+        }).fail((err) => {
+            console.log(err.message);
+        })
+    }
+}
+export function resetUserPassword(password) {
+    return dispatch => {
+
+    }
+}

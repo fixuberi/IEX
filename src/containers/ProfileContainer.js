@@ -1,117 +1,183 @@
 import React, { Component } from 'react';
+import TextInput from '../components/common/TextInput';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as userActions from '../actions/userActions';
+
+const ProfileWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+`;
+const Content = styled.div`
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    background: #aaaaaa38;
+    padding: 1em;
+    box-sizing: border-box;
+    h2 {
+        font-size: 1.5em;
+    }
+    li {
+        padding-top: 1em;
+        span {
+            color: #4095c6;
+            &:after {
+                content: ' ';
+            }
+        }
+    }
+`;
+const Bar = styled.div`
+    width: 350px;
+    background: #aaaaaa38;
+    display: flex;
+    justify-content: space-between;
+`;
+const BarButton = styled.div`
+    box-sizing: border-box;
+    width: 50%;
+    height: 100%;
+    padding:0.3em 1.2em;
+    border: none;    
+    color:#FFFFFF;
+    background-color:#4eb5f1;
+    text-align:center;
+    transition: all 0.2s;
+    &:hover{
+        background-color:#4095c6;
+    }
+    &:focus {
+        outline: none;
+    }
+`;
 
 const User = require('oauthio-web').User;
 
-export class ProfileContainer extends Container {
+class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
             editingInfo: false,
-            changingPassword: false,
+            formSubmitted: false,
+            user: {
+                ...this._initialUserState()
+            }
         }
     }
-    onChangePasswordClick = () => this.setState({ changingPassword: true });
+    handleChange = (event) => {
+        const { name: key, value } = event.target;
+        const { user } = this.state;
+        this.setState({ 
+            user: {
+                ...user,
+                [key]: value.trim()
+            },
+            submitted: false
+         });
+    }
     onEditInfoClick = () => this.setState({ editingInfo: true });
     onGoBackClick = () => {
         this._showUserInfoBlock();
     }
-    onSaveInfoClick = (info) => {
-        //dispatch action with recived info
-        this._showUserInfoBlock();
-    }
-    onSaveNewPasswordClick = (password) => {
-        //dispatch action with recived password
+    onSaveInfoClick = () => {
+        const { firstName, lastName, email } = this.state.user;
+        this.setState({ formSubmitted: true });
+        if (!firstName || !lastName) return;
+        const userInfo = {
+            firstname: firstName,
+            lastname: lastName,
+            email
+        };
+        this.props.userActions.updateUserInfo(userInfo, this.props.history);
         this._showUserInfoBlock();
     }
     _showUserInfoBlock = () => {
         this.setState({
             editingInfo: false,
-            changingPassword: false
+            user: {
+                ...this._initialUserState()
+            }
         }) 
+    }
+    _initialUserState = () => {
+        const { firstname, lastname, email } = User.getIdentity().data;
+        return {
+            firstName: firstname,
+            lastName: lastname,
+            email: email,
+        }
     }
     render() {
         const user = User.getIdentity();
         const userInfo = (
             <ProfileWrapper>
+                <Bar>
+                    <BarButton onClick={this.onEditInfoClick}>Edit info</BarButton>
+                </Bar>
                 <Content>
+                <h2>Profile</h2>
                     <ul>
                         <li>
-                            First name:{user.firstname}
+                            <span>First name:</span>{this.state.user.firstName}
                         </li>
                         <li>
-                            Last name:{user.lastname}
+                            <span>Last name:</span>{this.state.user.lastName}
                         </li>
                         <li>
-                            Email:{user.email}
+                            <span>Email:</span>{this.state.user.email}
                         </li>
                     </ul>
                 </Content>
-                <Bar>
-                    <BarButton>Change password</BarButton>
-                    <BarButton>Edit info</BarButton>
-                </Bar>
             </ProfileWrapper>
         );
         const editingInfo = (
-            <ProfileContainer>
+            <ProfileWrapper>
                 <Bar>
-                    <BarButton>Back</BarButton>
-                    <BarButton>Save</BarButton>
+                    <BarButton onClick={this.onGoBackClick}>Back</BarButton>
+                    <BarButton onClick={this.onSaveInfoClick}>Save</BarButton>
                 </Bar>
                 <Content>
-                    <div>
-                        <label htmlFor="firstName">First name</label>
-                        <input type="text" name="firstName" value={user.firstname} onChange={this.handleChange}></input>
-                            { submitted && !user.firstName && 
-                                <div>First name is required!</div>
-                            }
-                    </div>
-                    <div>
-                        <label htmlFor="lastName">Last name</label>
-                        <input type="text" name="lastName" value={user.lastname} onChange={this.handleChange}></input>
-                            { submitted && !user.lastName && 
-                                <div>Last name is required!</div>
-                            }
-                    </div>
-                    <div>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" name="email" value={user.email} onChange={this.handleChange}></input>
-                            { submitted && !user.email && 
-                                <div>Email is required!</div>
-                            }
-                    </div>
+                    <h2>Editing user info</h2>
+                    <TextInput  fieldName="firstName"
+                                label="First name"
+                                value={this.state.user.firstName}
+                                onChange={this.handleChange}
+                                formSubmitted={this.state.formSubmitted}
+                    />
+                    <TextInput  fieldName="lastName"
+                                label="Last name"
+                                value={this.state.user.lastName}
+                                onChange={this.handleChange}
+                                formSubmitted={this.state.formSubmitted}
+                    />
                 </Content>
-            </ProfileContainer>
+            </ProfileWrapper>
         );
-        const changingPassword = (
-            <ProfileContainer>
-                <Bar>
-                    <BarButton>Back</BarButton>
-                    <BarButton>Save</BarButton>
-                </Bar>
-                <Content>
-                    <div>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" name="password" value={user.password} onChange={this.handleChange} autoComplete='false'></input>
-                            { submitted && !user.password && 
-                                <div>Password is required!</div>
-                            }
-                    </div>
-                    <div>
-                        <label htmlFor="passwordConfirm">Password confirm</label>
-                        <input type="password" name="passwordConfirm" value={user.passwordConfirm} onChange={this.handleChange} autoComplete='false'></input>
-                            { submitted && !user.passwordConfirm && 
-                                <div>Password confirmation is required!</div>
-                            }
-                            { submitted && user.passwordConfirm != user.password && 
-                                <div>Passwords are not match!</div>
-                            }
-                    </div>
-                </Content>
-            </ProfileContainer>
-        );
+        const currentBlock = (() => {
+            if(this.state.editingInfo) return editingInfo;
+            return userInfo; 
+        })();
         return(
-                dfdfeb
+            currentBlock
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {}
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        userActions: bindActionCreators(userActions, dispatch)
+    }
+};
+const ProfileContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Profile);
+export default ProfileContainer;

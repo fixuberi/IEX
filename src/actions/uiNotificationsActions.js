@@ -32,6 +32,9 @@ export function addFailureLoginError(reason) {
 export function addNonExistentCompanyError(companySymbol) {
     return addErrorMessage(`Company with symbol "${companySymbol}" does not exist`);
 }
+export function addSuccessEditingUserInfoAlert() {
+    return addAlertMessage('User info successfuly edited');
+}
 export function clearAllMessages() {
     return {
         type: CLEAR_ALL_MESSAGES
