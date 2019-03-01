@@ -16,7 +16,11 @@ import {
     RECIVE_COMPANY_LOGO,
     CLEAR_COMPANY_LOGO,
 } from './constants';
+import ChartsApi from '../api/ChartsApi';
+import CompanyApi from '../api/CompanyApi';
 
+const chartsApi = new ChartsApi;
+const companyApi = new CompanyApi;
 export const availablePeriods = {
     FIVE_YEARS:   '5y',
     TWO_YEARS:    '2y',
@@ -58,23 +62,25 @@ export function clearChartPoints() {
     }
 }
 export function fetchChartPoints(symbol, period) {
+    const allowedKeys = ['date', 'change', 'close'];
     return async function(dispatch) {
         dispatch(requestChartPoints());
-        const response = await fetch(`https://api.iextrading.com/1.0/stock/${symbol}/chart/${period}`);
-        if(response.status === 404) throw 404;
-        const json = await response.json();           
-        const allowedKeys = ['date', 'change', 'close'];
-        const filteredJson = json.map(rawObj => {
-            return Object.keys(rawObj)
-                        .filter(key => allowedKeys.includes(key))
-                        .reduce((obj, key) => {
-                            return {
-                                ...obj,
-                                [key]: rawObj[key]
-                            };
-                        }, {});
-        });     
-        dispatch(reciveChartPoints(filteredJson))    
+        const json = await chartsApi.getChartPoints(symbol, period);
+        const filteredJson = filterJsonByKeys(json, allowedKeys);
+        dispatch(reciveChartPoints(filteredJson));
+        
+        function filterJsonByKeys(json, allowedKeys) {
+           return json.map(rawObj => {
+                return Object.keys(rawObj)
+                            .filter(key => allowedKeys.includes(key))
+                            .reduce((obj, key) => {
+                                return {
+                                    ...obj,
+                                    [key]: rawObj[key]
+                                };
+                            }, {});
+            });
+        }
     }
 }
 
@@ -96,9 +102,7 @@ export function clearCompanyData() {
 export function fetchCompanyData(symbol) {
     return async function(dispatch) {
         dispatch(requestCompanyData());
-        const response = await fetch(`https://api.iextrading.com/1.0/stock/${symbol}/company`)
-        if(response.status === 404) throw 404;
-        const json = await response.json();
+        const json = await companyApi.getCompanyData(symbol);
         dispatch(reciveCompanyData(json));
     }
 }
@@ -120,9 +124,7 @@ export function clearCompanyLogo() {
 export function fetchCompanyLogo(symbol) {
     return async function(dispatch) {
         dispatch(requestCompanyLogo());
-        const response = await fetch(`https://api.iextrading.com/1.0/stock/${symbol}/logo`)
-        if(response.status === 404) throw 404;
-        const json = await response.json();
+        const json = await companyApi.getCompanyLogo(symbol)
         dispatch(reciveCompanyLogo(json));
     }
 }
